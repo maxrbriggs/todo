@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
 		fclose(todo_file);
 
 		execv(EDITOR, ARGV_LIST);
+	} else if (argc == 2 && !strcmp(argv[1], "-a")) {
+		fclose(todo_file);
+
+		execv(EDITOR, ARGV_LIST);
 	}
 
 }
