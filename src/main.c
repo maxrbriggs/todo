@@ -23,7 +23,7 @@ int main(int argc, char *argv[])
 	const char *EDITOR = getenv("EDITOR");
 
 	/* create argument list for executing EDITOR on TODO_PATH */
-	char * const ARGV_LIST[] = {EDITOR, TODO_PATH, NULL};
+	const char * const ARGV_LIST[] = {EDITOR, TODO_PATH, NULL};
 
 	todo_file = fopen(TODO_PATH, "a+"); /* Set file to append and read */
 
@@ -33,7 +33,9 @@ int main(int argc, char *argv[])
 	if (argc == 1) {
 		no_args(tomorrow_iso, todo_file);
 
-		printf("EDITOR: %s\nARGV_LIST[0]: %s\nARGV_LIST[1]: %s\n", EDITOR, ARGV_LIST[0], ARGV_LIST[1]);
+		fclose(todo_file);
+
 		execv(EDITOR, ARGV_LIST);
 	}
+
 }
