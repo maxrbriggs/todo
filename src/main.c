@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 
 	todo_file = fopen(TODO_PATH, "a+"); /* Set file to append and read */
 
+	/* Set iso date strings for today and tomorrow */
 	sprintf(today_iso, "%i-%02i-%02i\n", TODAY_TM.tm_year + 1900, TODAY_TM.tm_mon + 1, TODAY_TM.tm_mday);
 	sprintf(tomorrow_iso, "%i-%02i-%02i\n", TOMORROW_TM.tm_year + 1900, TOMORROW_TM.tm_mon + 1, TOMORROW_TM.tm_mday);
 
