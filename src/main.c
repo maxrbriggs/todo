@@ -1,62 +1,61 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <time.h>
 #include <string.h>
+#include <time.h>
 #include "helpers.h"
 
 int main(int argc, char *argv[])
 {
 	const int DAY_LENGTH_SECONDS = 86400;
-	const time_t TODAY_T = time(NULL);
-	const time_t TOMORROW_T = TODAY_T + DAY_LENGTH_SECONDS;
+	time_t today_t = time(NULL);
+	time_t tomorrow_t = today_t + DAY_LENGTH_SECONDS;
 
-	const struct tm TODAY_TM = *localtime(&TODAY_T);
-	const struct tm TOMORROW_TM = *localtime(&TOMORROW_T);
+	struct tm today_tm = *localtime(&today_t);
+	struct tm tomorrow_tm = *localtime(&tomorrow_t);
 
 	char today_iso[11];
 	char tomorrow_iso[11];
 
-	const char *TODO_PATH = getenv("TODO");
+	char *todo_path = getenv("TODO");
 	FILE *todo_file;
 
-	const char *EDITOR = getenv("EDITOR");
+	char *editor = getenv("EDITOR");
 
 	/* create argument list for executing EDITOR on TODO_PATH */
-	const char * const ARGV_LIST[] = {EDITOR, TODO_PATH, NULL};
+	char * argv_list[] = {editor, todo_path, NULL};
 
 	int line_num = 0;
 
 	/* Set file to append and read */
-	if ((todo_file = fopen(TODO_PATH, "a+")) == NULL) {
-		fprintf(stderr, "Problem opening %s\n", TODO_PATH);
+	if ((todo_file = fopen(todo_path, "a+")) == NULL) {
+		fprintf(stderr, "Problem opening %s\n", todo_path);
 		exit(1);
 	}
 
 	/* Set iso date strings for today and tomorrow */
 	sprintf(today_iso, "%i-%02i-%02i\n",
-		TODAY_TM.tm_year + 1900,
-		TODAY_TM.tm_mon + 1,
-		TODAY_TM.tm_mday);
+		today_tm.tm_year + 1900,
+		today_tm.tm_mon + 1,
+		today_tm.tm_mday);
 	sprintf(tomorrow_iso, "%i-%02i-%02i\n",
-		TOMORROW_TM.tm_year + 1900,
-		TOMORROW_TM.tm_mon + 1,
-		TOMORROW_TM.tm_mday);
+		tomorrow_tm.tm_year + 1900,
+		tomorrow_tm.tm_mon + 1,
+		tomorrow_tm.tm_mday);
 
 	if (argc == 1) {
 		no_args(tomorrow_iso, todo_file);
 		fclose(todo_file);
-		execvp(EDITOR, ARGV_LIST);
+		execvp(editor, argv_list);
 	} else if (argc == 2 && !strcmp(argv[1], "-a")) {
 		fclose(todo_file);
-		execvp(EDITOR, ARGV_LIST);
+		execvp(editor, argv_list);
 	} else if (argc == 2 && !strcmp(argv[1], "-c")) {
 		line_num = find_line(today_iso, tomorrow_iso, todo_file);
-		print_file(line_num, TODO_PATH);
+		print_file(line_num, todo_path);
 		fclose(todo_file);
 	} else if (argc == 2 && !strcmp(argv[1], "-t")) {
 		find_line(today_iso, tomorrow_iso, todo_file);
 		fclose(todo_file);
 	}
-
 }
