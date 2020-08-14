@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <string.h>
 #include "helpers.h"
 
 void no_args(char *tomorrow_iso, FILE *todo_file)
@@ -22,33 +24,36 @@ void no_args(char *tomorrow_iso, FILE *todo_file)
 
 int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 {
+	int looped = 0;
 	int today_line = 0;
 	int tomorrow_line = 0;
-	int eof_line = 0;
 
 	char *line = NULL;
-	size_t *line_length = 0;
+	size_t line_length = 0;
 
 	int line_num = 0;
 
-	while (getline(&line, line_length, todo_file) != -1) {
+	fprintf(stderr, "today_iso: %s", today_iso);
+
+	while (getline(&line, &line_length, todo_file) != -1) {
+		looped = 1;
 		++line_num;
 		if (!strcmp(line, today_iso))
 			today_line = line_num;
 		else if (!strcmp(line, tomorrow_iso))
 			tomorrow_line = line_num;
-		else if (!strcmp(line, EOF))
-			eof_line = line_num;
 	}
 
-	free(line);
+	// Free if line was used
+	if (looped)
+		free(line);
 
-	fprintf(stderr, "Total lines: %i\nToday line: %i\nTomorrow line: %i\n", eof_line, today_line, tomorrow_line);
+	fprintf(stderr, "Total lines: %i\nToday line: %i\nTomorrow line: %i\n", line_num, today_line, tomorrow_line);
 
 	if (tomorrow_line > 0)
-		return (eof_line - tomorrow_line);
+		return (line_num - tomorrow_line);
 	else if (today_line > 0)
-		return (eof_line - today_line);
+		return (line_num - today_line);
 	else
 		return -1;
 }
