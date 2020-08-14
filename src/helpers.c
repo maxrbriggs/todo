@@ -50,31 +50,23 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 
 	fprintf(stderr, "Total lines: %i\nToday line: %i\nTomorrow line: %i\n", line_num, today_line, tomorrow_line);
 
-	if (tomorrow_line > 0)
-		return (line_num - tomorrow_line);
-	else if (today_line > 0)
-		return (line_num - today_line);
+	if (today_line > 0)
+		return line_num - today_line;
 	else
-		return -1;
+		return line_num - tomorrow_line;
 }
 
-void print_file(int lines, const char *path)
+void print_file(int lines, char *path)
 {
-	char * argv_list[3];
+	char * argv_list[4];
 
-	argv_list[1] = (char *) malloc(50 * sizeof(char));
+	argv_list[0] = "tail";
+	argv_list[1] = (char *) malloc(10 * sizeof(char));
+	argv_list[2] = path;
+	argv_list[3] = NULL;
 
-	argv_list[2] = NULL;
-
-	if (lines <= 0) { /* if date was not found */
-		argv_list[0] = "cat";
-		sprintf(argv_list[1], path);
-		execvp("cat", argv_list);
-	} else {
-		argv_list[0] = "tail";
-		sprintf(argv_list[1], "-n %i %s", lines, path);
-		execvp("tail", argv_list);
-	}
+	sprintf(argv_list[1], "-n %i", lines);
+	execvp("tail", argv_list);
 
 	free(argv_list[1]);
 }
