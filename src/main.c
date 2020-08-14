@@ -25,22 +25,38 @@ int main(int argc, char *argv[])
 	/* create argument list for executing EDITOR on TODO_PATH */
 	const char * const ARGV_LIST[] = {EDITOR, TODO_PATH, NULL};
 
-	todo_file = fopen(TODO_PATH, "a+"); /* Set file to append and read */
+	int line_num = 0;
+
+	/* Set file to append and read */
+	if ((todo_file = fopen(TODO_PATH, "a+")) == NULL) {
+		fprintf(stderr, "Problem opening %s\n", TODO_PATH);
+		exit(1);
+	}
 
 	/* Set iso date strings for today and tomorrow */
-	sprintf(today_iso, "%i-%02i-%02i\n", TODAY_TM.tm_year + 1900, TODAY_TM.tm_mon + 1, TODAY_TM.tm_mday);
-	sprintf(tomorrow_iso, "%i-%02i-%02i\n", TOMORROW_TM.tm_year + 1900, TOMORROW_TM.tm_mon + 1, TOMORROW_TM.tm_mday);
+	sprintf(today_iso, "%i-%02i-%02i\n",
+		TODAY_TM.tm_year + 1900,
+		TODAY_TM.tm_mon + 1,
+		TODAY_TM.tm_mday);
+	sprintf(tomorrow_iso, "%i-%02i-%02i\n",
+		TOMORROW_TM.tm_year + 1900,
+		TOMORROW_TM.tm_mon + 1,
+		TOMORROW_TM.tm_mday);
 
 	if (argc == 1) {
 		no_args(tomorrow_iso, todo_file);
-
 		fclose(todo_file);
-
-		execv(EDITOR, ARGV_LIST);
+		execvp(EDITOR, ARGV_LIST);
 	} else if (argc == 2 && !strcmp(argv[1], "-a")) {
 		fclose(todo_file);
-
-		execv(EDITOR, ARGV_LIST);
+		execvp(EDITOR, ARGV_LIST);
+	} else if (argc == 2 && !strcmp(argv[1], "-c")) {
+		line_num = find_line(today_iso, tomorrow_iso, todo_file);
+		print_file(line_num, TODO_PATH);
+		fclose(todo_file);
+	} else if (argc == 2 && !strcmp(argv[1], "-t")) {
+		find_line(today_iso, tomorrow_iso, todo_file);
+		fclose(todo_file);
 	}
 
 }

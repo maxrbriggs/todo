@@ -10,10 +10,10 @@ _OBJ = helpers.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -ggdb -c -o $@ $< $(CFLAGS)
 
 todo: $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -ggdb -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
