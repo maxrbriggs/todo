@@ -49,9 +49,9 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 	fprintf(stderr, "Total lines: %i\nToday line: %i\nTomorrow line: %i\n", line_num, today_line, tomorrow_line);
 
 	if (today_line > 0)
-		return line_num - today_line;
+		return line_num - today_line + 1;
 	else
-		return line_num - tomorrow_line;
+		return line_num - tomorrow_line + 1;
 }
 
 void print_file(int lines, char *path)
