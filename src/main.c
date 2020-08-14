@@ -14,8 +14,8 @@ int main(int argc, char *argv[])
 	struct tm today_tm = *localtime(&today_t);
 	struct tm tomorrow_tm = *localtime(&tomorrow_t);
 
-	char today_iso[11];
-	char tomorrow_iso[11];
+	char today_iso[12];
+	char tomorrow_iso[12];
 
 	char *todo_path = getenv("TODO");
 	FILE *todo_file;

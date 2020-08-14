@@ -33,8 +33,6 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 
 	int line_num = 0;
 
-	fprintf(stderr, "today_iso: %s", today_iso);
-
 	while (getline(&line, &line_length, todo_file) != -1) {
 		looped = 1;
 		++line_num;
