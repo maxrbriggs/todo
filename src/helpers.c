@@ -66,3 +66,20 @@ void print_file(int lines, char *path)
 
 	free(argv_list[1]);
 }
+
+void append_text(char **text, int text_length, FILE *todo_file)
+{
+	/* this should be long enought for anybody */
+	char *todo_text = (char *)malloc(255 * sizeof(char));
+
+	/* prime todo_text with first member */
+	strcpy(todo_text, text[2]);
+	for (int i = 3; i < text_length; i++) {
+		strcat(todo_text, " ");
+		strcat(todo_text, text[i]);
+	}
+
+	fprintf(todo_file, "\t%s\n", todo_text);
+
+	free(todo_text);
+}
