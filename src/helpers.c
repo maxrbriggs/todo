@@ -73,8 +73,8 @@ void append_text(char **text, int text_length, FILE *todo_file)
 	char *todo_text = (char *)malloc(255 * sizeof(char));
 
 	/* prime todo_text with first member */
-	strcpy(todo_text, text[2]);
-	for (int i = 3; i < text_length; i++) {
+	strcpy(todo_text, text[0]);
+	for (int i = 1; i < text_length; i++) {
 		strcat(todo_text, " ");
 		strcat(todo_text, text[i]);
 	}
