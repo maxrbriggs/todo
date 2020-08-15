@@ -1,9 +1,26 @@
+/* A simple utility for editing and printing a to-do list
+*  Copyright (C) 2020 Max Briggs
+*
+*  This program is free software: you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation, either version 3 of the License, or
+*  (at your option) any later version.
+*
+*  This program is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  You should have received a copy of the GNU General Public License
+*  along with this program.  If not, see <https://www.gnu.org/licenses/>
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
-#include "helpers.h"
+#include "todo_funcs.h"
 
 int main(int argc, char *argv[])
 {
@@ -56,7 +73,7 @@ int main(int argc, char *argv[])
 		tomorrow_tm.tm_mday);
 
 	if (argc == 1) {
-		no_args(tomorrow_iso, todo_file);
+		add_date(tomorrow_iso, todo_file);
 		fclose(todo_file);
 		execvp(editor, argv_list);
 	} else if (argc == 2 && !strcmp(argv[1], "-a")) {
@@ -73,7 +90,7 @@ int main(int argc, char *argv[])
 		append_text(&argv[2], argc - 2, todo_file);
 		fclose(todo_file);
 	} else if (argc >= 2 && (strcmp(argv[1], "-a") || strcmp(argv[1], "-c"))) {
-		no_args(tomorrow_iso, todo_file);
+		add_date(tomorrow_iso, todo_file);
 		append_text(&argv[1], argc - 1, todo_file);
 		fclose(todo_file);
 	}

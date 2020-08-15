@@ -2,9 +2,10 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include "helpers.h"
+#include "todo_funcs.h"
 
-void no_args(char *tomorrow_iso, FILE *todo_file)
+/* Search todo_file for iso_date string and append it if it isn't found */
+void add_date(char *iso_date, FILE *todo_file)
 {
 	int string_found = 0;
 
@@ -12,19 +13,22 @@ void no_args(char *tomorrow_iso, FILE *todo_file)
 	size_t line_length = 0;
 
 	while (getline(&line, &line_length, todo_file) != -1) {
-		if (!strcmp(line, tomorrow_iso)) {
+		if (!strcmp(line, iso_date)) {
 			string_found = 1;
 			break;
 		}
 	}
 
 	if (!string_found)
-		fprintf(todo_file, "%-s", tomorrow_iso);
+		fprintf(todo_file, "%-s", iso_date);
 }
 
+/* Find the line number location of today and tomorrow's iso date strings and
+*  the length of todo_file. Return the difference between string location and
+*  lenght of the file.
+*/
 int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 {
-	int looped = 0;
 	int today_line = 0;
 	int tomorrow_line = 0;
 
@@ -34,7 +38,6 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 	int line_num = 0;
 
 	while (getline(&line, &line_length, todo_file) != -1) {
-		looped = 1;
 		++line_num;
 		if (!strcmp(line, today_iso))
 			today_line = line_num;
@@ -42,9 +45,7 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 			tomorrow_line = line_num;
 	}
 
-	/* Free if line was used */
-	if (looped)
-		free(line);
+	free(line);
 
 	if (today_line > 0)
 		return line_num - today_line + 1;
@@ -52,6 +53,7 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 		return line_num - tomorrow_line + 1;
 }
 
+/* Call tail to print the last lines of the file at path */
 void print_file(int lines, char *path)
 {
 	char * argv_list[4];
@@ -67,14 +69,15 @@ void print_file(int lines, char *path)
 	free(argv_list[1]);
 }
 
-void append_text(char **text, int text_length, FILE *todo_file)
+/* Append text with num_words to todo_file */
+void append_text(char **text, int num_words, FILE *todo_file)
 {
 	/* this should be long enought for anybody */
 	char *todo_text = (char *)malloc(255 * sizeof(char));
 
 	/* prime todo_text with first member */
 	strcpy(todo_text, text[0]);
-	for (int i = 1; i < text_length; i++) {
+	for (int i = 1; i < num_words; i++) {
 		strcat(todo_text, " ");
 		strcat(todo_text, text[i]);
 	}
@@ -84,9 +87,10 @@ void append_text(char **text, int text_length, FILE *todo_file)
 	free(todo_text);
 }
 
+/* Print help text */
 void print_help()
 {
-char * helpmsg = "Usage: todo [OPTION] [MESSAGE]...\nEdit or print todo file.\n\nWith no MESSAGE, execute EDITOR.\n\n  -a    Append to TODO without date\n  -c    Concatenate TODO\n  -h    Show this message\n\nExamples:\n  todo             Append to TODO and add date\n  todo -a          Append to TODO\n  todo -a example  Append \"example\" to TODO\n";
+	char * helpmsg = "Usage: todo [OPTION] [MESSAGE]...\nEdit or print todo file.\n\nWith no MESSAGE, execute EDITOR.\n\n  -a    Append to TODO without date\n  -c    Concatenate TODO\n  -h    Show this message\n\nExamples:\n  todo             Append to TODO and add date\n  todo -a          Append to TODO\n  todo -a example  Append \"example\" to TODO\n";
 
-fprintf(stdout, "%s", helpmsg);
+	fprintf(stdout, "%s", helpmsg);
 }
