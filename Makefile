@@ -6,7 +6,7 @@ IDIR = include
 CFLAGS = -Wall -I$(IDIR)
 
 CDIR = src
-ODIR = src/obj
+ODIR = src
 
 _DEPS = helpers.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
