@@ -29,3 +29,7 @@ Examples:
 	todo             Append to TODO and add date
 	todo -a          Append to TODO
 	todo -a example  Append "example" to TODO
+
+Building
+--------
+Run 'make' to build the utility. The executable is called 'todo'.
