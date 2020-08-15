@@ -64,8 +64,5 @@ int main(int argc, char *argv[])
 		no_args(tomorrow_iso, todo_file);
 		append_text(&argv[1], argc - 1, todo_file);
 		fclose(todo_file);
-	} else if (argc == 2 && !strcmp(argv[1], "-t")) {
-		find_line(today_iso, tomorrow_iso, todo_file);
-		fclose(todo_file);
 	}
 }
