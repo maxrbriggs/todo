@@ -54,6 +54,9 @@ int main(int argc, char *argv[])
 		line_num = find_line(today_iso, tomorrow_iso, todo_file);
 		print_file(line_num, todo_path);
 		fclose(todo_file);
+	} else if (argc == 2 && !strcmp(argv[1], "-h")) {
+		fclose(todo_file);
+		print_help();
 	} else if (argc > 2 && !strcmp(argv[1], "-a")) {
 		append_text(&argv[2], argc - 2, todo_file);
 		fclose(todo_file);
