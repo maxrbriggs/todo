@@ -1,19 +1,21 @@
-IDIR =../include
+IDIR =include
 CC = gcc
 CFLAGS = -I$(IDIR)
 
-ODIR = obj
+CDIR = src
+
+ODIR = src/obj
 
 _DEPS = helpers.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = helpers.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
-$(ODIR)/%.o: %.c $(DEPS)
-	$(CC) -Wall -ggdb -c -o $@ $< $(CFLAGS)
+$(ODIR)/%.o: $(CDIR)/%.c $(DEPS)
+	$(CC) -Wall -c -o $@ $< $(CFLAGS)
 
 todo: $(OBJ)
-	$(CC) -Wall -ggdb -o $@ $^ $(CFLAGS)
+	$(CC) -Wall -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 
