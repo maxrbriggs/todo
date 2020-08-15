@@ -83,3 +83,10 @@ void append_text(char **text, int text_length, FILE *todo_file)
 
 	free(todo_text);
 }
+
+void print_help()
+{
+char * helpmsg = "Usage: todo [OPTION] [MESSAGE]...\nEdit or print todo file.\n\nWith no MESSAGE, execute EDITOR.\n\n  -a	Append to TODO without date\n  -c      Concatenate TODO\n  -h      Show this message\n\nExamples:\n  todo             Append to TODO and add date\n  todo -a          Append to TODO\n  todo -a example  Append \"example\" to TODO\n";
+
+fprintf(stdout, "%s", helpmsg);
+}
