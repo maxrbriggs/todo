@@ -1,6 +1,6 @@
 IDIR =include
 CC = gcc
-CFLAGS = -I$(IDIR)
+CFLAGS = -Wall -I$(IDIR)
 
 CDIR = src
 
@@ -12,10 +12,10 @@ _OBJ = helpers.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: $(CDIR)/%.c $(DEPS)
-	$(CC) -Wall -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 todo: $(OBJ)
-	$(CC) -Wall -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 .PHONY: clean
 

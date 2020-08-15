@@ -23,15 +23,9 @@ int main(int argc, char *argv[])
 	char *editor;
 
 	/* create argument list for executing EDITOR on TODO_PATH */
-	char * argv_list[] = {editor, todo_path, NULL};
+	char * argv_list[3];
 
 	int line_num = 0;
-
-	/* Set file to append and read */
-	if ((todo_file = fopen(todo_path, "a+")) == NULL) {
-		fprintf(stderr, "Problem opening %s\n", todo_path);
-		exit(1);
-	}
 
 	if ((todo_path = getenv("TODO")) == NULL) {
 		fprintf(stderr, "Please define TODO environment variable for todo file.\n");
@@ -40,6 +34,16 @@ int main(int argc, char *argv[])
 	if ((editor = getenv("EDITOR")) == NULL) {
 		fprintf(stderr, "Please define EDITOR environment variable.\n");
 	}
+
+	/* Set file to append and read */
+	if ((todo_file = fopen(todo_path, "a+")) == NULL) {
+		fprintf(stderr, "Problem opening %s\n", todo_path);
+		exit(1);
+	}
+
+	argv_list[0] = editor;
+	argv_list[1] = todo_path;
+	argv_list[2] = NULL;
 
 	/* Set iso date strings for today and tomorrow */
 	sprintf(today_iso, "%i-%02i-%02i\n",
