@@ -62,15 +62,8 @@ int main(int argc, char *argv[])
 	argv_list[1] = todo_path;
 	argv_list[2] = NULL;
 
-	/* Set iso date strings for today and tomorrow */
-	sprintf(today_iso, "%i-%02i-%02i\n",
-		today_tm.tm_year + 1900,
-		today_tm.tm_mon + 1,
-		today_tm.tm_mday);
-	sprintf(tomorrow_iso, "%i-%02i-%02i\n",
-		tomorrow_tm.tm_year + 1900,
-		tomorrow_tm.tm_mon + 1,
-		tomorrow_tm.tm_mday);
+	datestring(today_iso, &today_tm);
+	datestring(tomorrow_iso, &tomorrow_tm);
 
 	if (argc == 1) {
 		add_date(tomorrow_iso, todo_file);
