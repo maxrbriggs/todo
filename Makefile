@@ -21,6 +21,10 @@ $(ODIR)/%.o: $(CDIR)/%.c $(DEPS)
 $(EXEC): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
+debug : CFLAGS = -g -Wall -I$(IDIR)
+debug : $(OBJ)
+debug : $(EXEC)
+
 .PHONY: install clean
 
 install: $(EXEC)
