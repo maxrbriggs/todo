@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 #include "todo_funcs.h"
 
 /* Search todo_file for iso_date string and append it if it isn't found */
@@ -93,4 +94,13 @@ void print_help()
 	char * helpmsg = "Usage: todo [OPTION] [MESSAGE]...\nEdit or print todo file.\n\nWith no MESSAGE, execute EDITOR.\n\n  -a    Append to TODO without date\n  -c    Concatenate TODO\n  -h    Show this message\n\nExamples:\n  todo             Append to TODO and add date\n  todo -a          Append to TODO\n  todo -a example  Append \"example\" to TODO\n";
 
 	fprintf(stdout, "%s", helpmsg);
+}
+
+/* Set iso format date string */
+void datestring(char *iso_string, struct tm * date)
+{
+	sprintf(iso_string, "%i-%02i-%02i\n",
+		date->tm_year + 1900,
+		date->tm_mon + 1,
+		date->tm_mday);
 }
