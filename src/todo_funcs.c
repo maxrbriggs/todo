@@ -26,7 +26,7 @@ void add_date(char *iso_date, FILE *todo_file)
 
 /* Find the line number location of today and tomorrow's iso date strings and
 *  the length of todo_file. Return the difference between string location and
-*  lenght of the file.
+*  length of the file. Return -1 if the string location cannot be found.
 */
 int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 {
@@ -50,8 +50,10 @@ int find_line(char *today_iso, char *tomorrow_iso, FILE *todo_file)
 
 	if (today_line > 0)
 		return line_num - today_line + 1;
-	else
+	else if (tomorrow_line > 0)
 		return line_num - tomorrow_line + 1;
+	else
+		return -1;
 }
 
 /* Call tail to print the last lines of the file at path */
@@ -63,6 +65,12 @@ void print_file(int lines, char *path)
 	argv_list[1] = (char *) malloc(10 * sizeof(char));
 	argv_list[2] = path;
 	argv_list[3] = NULL;
+
+	/* Print and quit if no today or tomorrow lines not found */
+	if (lines == -1) {
+		fprintf(stdout, "Nothing to do!\n");
+		return;
+	}
 
 	sprintf(argv_list[1], "-n %i", lines);
 	execvp("tail", argv_list);
