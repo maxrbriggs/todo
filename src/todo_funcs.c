@@ -3,6 +3,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+
+/* For directory checking */
+#include <dirent.h>
+#include <sys/stat.h>
+
 #include "todo_funcs.h"
 
 /* Search todo_file for iso_date string and append it if it isn't found */
@@ -111,4 +116,15 @@ void datestring(char *iso_string, struct tm * date)
 		date->tm_year + 1900,
 		date->tm_mon + 1,
 		date->tm_mday);
+}
+
+void select_subdir(char *path)
+{
+	DIR *test = opendir(path);
+	if (test)
+		/* check if directory exists */
+		closedir(test);
+	else if (!test)
+		/* create directory if it doesn't */
+		mkdir(path, 0755);
 }
