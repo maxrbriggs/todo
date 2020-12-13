@@ -37,7 +37,5 @@ char * strip_filename(char * file_path) {
 	path_length++;
 	new_path[path_length] = '\0';
 
-	printf("New path: %s \n", new_path);
-
 	return new_path;
 }
