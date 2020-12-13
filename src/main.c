@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include "sublist.h"
 #include "todo_funcs.h"
 
 int main(int argc, char *argv[])
@@ -34,10 +35,12 @@ int main(int argc, char *argv[])
 	char today_iso[12];
 	char tomorrow_iso[12];
 
-	char *todo_path;
-	FILE *todo_file;
+	char *todo_path = NULL;
+	FILE *todo_file = NULL;
 
-	char *editor;
+	char *base_path = NULL;
+
+	char *editor = NULL;
 
 	/* create argument list for executing EDITOR on TODO_PATH */
 	char * argv_list[3];
@@ -79,6 +82,24 @@ int main(int argc, char *argv[])
 	} else if (argc == 2 && !strcmp(argv[1], "-h")) {
 		fclose(todo_file);
 		print_help();
+	} else if (argc == 3 && !strcmp(argv[1], "-s")) {
+	/* non-zero length of argv[2] is implied by argv[2] existing */
+		base_path = strip_filename(todo_path);
+		strcat(base_path, argv[2]);
+		if (select_subdir(base_path)) {
+			strcat(base_path, "/todo.txt");
+			/* open the non-default subfile */
+			if ((todo_file = fopen(base_path, "a+")) == NULL) {
+				fprintf(stderr, "Problem opening %s\n", base_path);
+				exit(1);
+			}
+			add_date(tomorrow_iso, todo_file);
+			fclose(todo_file);
+			argv_list[1] = base_path;
+			execvp(editor, argv_list);
+		} else {
+			fprintf(stderr, "No directory specified.\n");
+		}
 	} else if (argc > 2 && !strcmp(argv[1], "-a")) {
 		append_text(&argv[2], argc - 2, todo_file);
 		fclose(todo_file);
