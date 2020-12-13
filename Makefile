@@ -8,9 +8,9 @@ CFLAGS = -Wall -I$(IDIR)
 CDIR = src
 ODIR = src
 
-_DEPS = todo_funcs.h
+_DEPS = todo_funcs.h sublist.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
-_OBJ = todo_funcs.o main.o
+_OBJ = todo_funcs.o sublist.o main.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 EXEC = todo
