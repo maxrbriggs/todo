@@ -6,7 +6,6 @@
 
 /* For directory checking */
 #include <dirent.h>
-#include <sys/stat.h>
 
 #include "todo_funcs.h"
 
@@ -118,13 +117,14 @@ void datestring(char *iso_string, struct tm * date)
 		date->tm_mday);
 }
 
-void select_subdir(char *path)
+/* Selects a sublist directory. Returns 1 if  directory exists, 0 if not */
+int select_subdir(char *path)
 {
 	DIR *test = opendir(path);
-	if (test)
-		/* check if directory exists */
+	if (test) {
 		closedir(test);
-	else if (!test)
-		/* create directory if it doesn't */
-		mkdir(path, 0755);
+		return 1;
+	} else {
+		return 0;
+	}
 }
