@@ -56,15 +56,15 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Please define EDITOR environment variable.\n");
 	}
 
+	todo_file_path = (char *) malloc((strlen(todo_dir_path) + 10) * sizeof(char));
+	strcpy(todo_file_path, todo_dir_path);
+	strcat(todo_file_path, "todo.txt");
+
 	/* Set file to append and read */
 	if ((todo_file = fopen(todo_file_path, "a+")) == NULL) {
 		fprintf(stderr, "Problem opening %s\n", todo_file_path);
 		exit(1);
 	}
-
-	todo_file_path = (char *) malloc((strlen(todo_dir_path) + 10) * sizeof(char));
-	strcpy(todo_file_path, todo_dir_path);
-	strcat(todo_file_path, "/todo.txt");
 
 	argv_list[0] = editor;
 	argv_list[1] = todo_file_path;
@@ -102,8 +102,8 @@ int main(int argc, char *argv[])
 			add_date(tomorrow_iso, todo_file);
 			fclose(todo_file);
 			argv_list[1] = base_path;
-			free(base_path);
 			execvp(editor, argv_list);
+			free(base_path);
 		} else {
 			fprintf(stderr, "No directory specified.\n");
 		}
