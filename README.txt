@@ -6,9 +6,9 @@ file with items separated by the date.
 
 Requirements
 ------------
-Setting the TODO and EDITOR environment variables.
+Setting the TODO_DIR and EDITOR environment variables.
 
-TODO
+TODO_DIR
 	The location of your to-do file
 EDITOR
 	Your prefered text editor
@@ -18,17 +18,17 @@ Usage
 
 todo [OPTION] [MESSAGE]...
 
-With no MESSAGE, execute EDITOR.
+With no MESSAGE, execute EDITOR on $TODO_DIR/todo.txt
 
 Options:
-	-a      Append to TODO without date
-	-c      Concatenate TODO
+	-a      Append to todo file without date
+	-c      Concatenate todo file
 	-h      Show this message
 
 Examples:
-	todo             Append to TODO and add date
-	todo -a          Append to TODO
-	todo -a example  Append "example" to TODO
+	todo             Append to todo file and add date
+	todo -a          Append to todo file
+	todo -a example  Append "example" to todo file
 
 Building
 --------
