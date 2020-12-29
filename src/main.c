@@ -52,10 +52,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Please define TODO environment variable for todo dir.\n");
 	}
 
-	if ((todo_file_path = getenv("TODO_FILE")) == NULL) {
-		fprintf(stderr, "Please define TODO environment variable for todo file.\n");
-	}
-
 	if ((editor = getenv("EDITOR")) == NULL) {
 		fprintf(stderr, "Please define EDITOR environment variable.\n");
 	}
@@ -65,6 +61,10 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Problem opening %s\n", todo_file_path);
 		exit(1);
 	}
+
+	todo_file_path = (char *) malloc((strlen(todo_dir_path) + 10) * sizeof(char));
+	strcpy(todo_file_path, todo_dir_path);
+	strcat(todo_file_path, "/todo.txt");
 
 	argv_list[0] = editor;
 	argv_list[1] = todo_file_path;
@@ -115,4 +115,5 @@ int main(int argc, char *argv[])
 		append_text(&argv[1], argc - 1, todo_file);
 		fclose(todo_file);
 	}
+	free(todo_file_path);
 }
