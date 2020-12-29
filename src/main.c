@@ -48,11 +48,11 @@ int main(int argc, char *argv[])
 
 	int line_num = 0;
 
-	if ((todo_dir_path = getenv("TODO")) == NULL) {
+	if ((todo_dir_path = getenv("TODO_DIR")) == NULL) {
 		fprintf(stderr, "Please define TODO environment variable for todo dir.\n");
 	}
 
-	if ((todo_file_path = getenv("TODO")) == NULL) {
+	if ((todo_file_path = getenv("TODO_FILE")) == NULL) {
 		fprintf(stderr, "Please define TODO environment variable for todo file.\n");
 	}
 
