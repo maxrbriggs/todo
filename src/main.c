@@ -89,7 +89,8 @@ int main(int argc, char *argv[])
 		print_help();
 	} else if (argc == 3 && !strcmp(argv[1], "-s")) {
 	/* non-zero length of argv[2] is implied by argv[2] existing */
-		base_path = strip_filename(todo_file_path);
+		base_path = (char *) malloc(256 * sizeof(char));
+		strcpy(base_path, todo_dir_path);
 		strcat(base_path, argv[2]);
 		if (select_subdir(base_path)) {
 			strcat(base_path, "/todo.txt");
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
 			add_date(tomorrow_iso, todo_file);
 			fclose(todo_file);
 			argv_list[1] = base_path;
+			free(base_path);
 			execvp(editor, argv_list);
 		} else {
 			fprintf(stderr, "No directory specified.\n");
