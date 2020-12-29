@@ -93,16 +93,20 @@ int main(int argc, char *argv[])
 		base_path = (char *) malloc(256 * sizeof(char));
 		strcpy(base_path, todo_dir_path);
 		strcat(base_path, argv[2]);
+
+		/* check if subdir exists and create it if not */
 		if (!select_subdir(base_path)) {
 			if (mkdir(base_path, 0777)) {
-				fprintf(stderr, "No directory specified.\n");
+				fprintf(stderr, "Failed to create directory");
 				free(base_path);
 				exit(1);
 			}
 		}
 
 		strcat(base_path, "/todo.txt");
-		/* open the non-default subfile */
+		argv_list[1] = base_path;
+
+		/* open for editing */
 		if ((todo_file = fopen(base_path, "a+")) == NULL) {
 			fprintf(stderr, "Problem opening %s\n", base_path);
 			free(base_path);
@@ -111,10 +115,10 @@ int main(int argc, char *argv[])
 
 		add_date(tomorrow_iso, todo_file);
 		fclose(todo_file);
-		argv_list[1] = base_path;
-		execvp(editor, argv_list);
-		free(base_path);
 
+		execvp(editor, argv_list);
+
+		free(base_path);
 	} else if (argc > 2 && !strcmp(argv[1], "-a")) {
 		append_text(&argv[2], argc - 2, todo_file);
 		fclose(todo_file);
