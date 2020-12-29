@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 	char today_iso[12];
 	char tomorrow_iso[12];
 
+	char *todo_dir_path = NULL;
 	char *todo_file_path = NULL;
 	FILE *todo_file = NULL;
 
@@ -46,6 +47,10 @@ int main(int argc, char *argv[])
 	char * argv_list[3];
 
 	int line_num = 0;
+
+	if ((todo_dir_path = getenv("TODO")) == NULL) {
+		fprintf(stderr, "Please define TODO environment variable for todo dir.\n");
+	}
 
 	if ((todo_file_path = getenv("TODO")) == NULL) {
 		fprintf(stderr, "Please define TODO environment variable for todo file.\n");
