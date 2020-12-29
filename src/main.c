@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <sys/stat.h>
 #include "sublist.h"
 #include "todo_funcs.h"
 
@@ -92,21 +93,28 @@ int main(int argc, char *argv[])
 		base_path = (char *) malloc(256 * sizeof(char));
 		strcpy(base_path, todo_dir_path);
 		strcat(base_path, argv[2]);
-		if (select_subdir(base_path)) {
-			strcat(base_path, "/todo.txt");
-			/* open the non-default subfile */
-			if ((todo_file = fopen(base_path, "a+")) == NULL) {
-				fprintf(stderr, "Problem opening %s\n", base_path);
+		if (!select_subdir(base_path)) {
+			if (mkdir(base_path, 0777)) {
+				fprintf(stderr, "No directory specified.\n");
+				free(base_path);
 				exit(1);
 			}
-			add_date(tomorrow_iso, todo_file);
-			fclose(todo_file);
-			argv_list[1] = base_path;
-			execvp(editor, argv_list);
-			free(base_path);
-		} else {
-			fprintf(stderr, "No directory specified.\n");
 		}
+
+		strcat(base_path, "/todo.txt");
+		/* open the non-default subfile */
+		if ((todo_file = fopen(base_path, "a+")) == NULL) {
+			fprintf(stderr, "Problem opening %s\n", base_path);
+			free(base_path);
+			exit(1);
+		}
+
+		add_date(tomorrow_iso, todo_file);
+		fclose(todo_file);
+		argv_list[1] = base_path;
+		execvp(editor, argv_list);
+		free(base_path);
+
 	} else if (argc > 2 && !strcmp(argv[1], "-a")) {
 		append_text(&argv[2], argc - 2, todo_file);
 		fclose(todo_file);
@@ -115,5 +123,8 @@ int main(int argc, char *argv[])
 		append_text(&argv[1], argc - 1, todo_file);
 		fclose(todo_file);
 	}
+
 	free(todo_file_path);
+
+	return 0;
 }
