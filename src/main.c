@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	char today_iso[12];
 	char tomorrow_iso[12];
 
-	char *todo_path = NULL;
+	char *todo_file_path = NULL;
 	FILE *todo_file = NULL;
 
 	char *base_path = NULL;
@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
 	int line_num = 0;
 
-	if ((todo_path = getenv("TODO")) == NULL) {
+	if ((todo_file_path = getenv("TODO")) == NULL) {
 		fprintf(stderr, "Please define TODO environment variable for todo file.\n");
 	}
 
@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 	}
 
 	/* Set file to append and read */
-	if ((todo_file = fopen(todo_path, "a+")) == NULL) {
-		fprintf(stderr, "Problem opening %s\n", todo_path);
+	if ((todo_file = fopen(todo_file_path, "a+")) == NULL) {
+		fprintf(stderr, "Problem opening %s\n", todo_file_path);
 		exit(1);
 	}
 
 	argv_list[0] = editor;
-	argv_list[1] = todo_path;
+	argv_list[1] = todo_file_path;
 	argv_list[2] = NULL;
 
 	datestring(today_iso, &today_tm);
@@ -77,14 +77,14 @@ int main(int argc, char *argv[])
 		execvp(editor, argv_list);
 	} else if (argc == 2 && !strcmp(argv[1], "-c")) {
 		line_num = find_line(today_iso, tomorrow_iso, todo_file);
-		print_file(line_num, todo_path);
+		print_file(line_num, todo_file_path);
 		fclose(todo_file);
 	} else if (argc == 2 && !strcmp(argv[1], "-h")) {
 		fclose(todo_file);
 		print_help();
 	} else if (argc == 3 && !strcmp(argv[1], "-s")) {
 	/* non-zero length of argv[2] is implied by argv[2] existing */
-		base_path = strip_filename(todo_path);
+		base_path = strip_filename(todo_file_path);
 		strcat(base_path, argv[2]);
 		if (select_subdir(base_path)) {
 			strcat(base_path, "/todo.txt");
